@@ -24,7 +24,7 @@ export const generateToken = (user) => {
   const { password, ...safeUser } = user;
 
   return jwt.sign(
-    { ...safeUser, _id: user?._id, id: user?._id, email: user?.email },
+    { ...safeUser, _id: user?.id, id: user?.id, email: user?.email },
     // process.env.JWT_SECRET,
     privateKey,
     {
