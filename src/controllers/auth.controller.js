@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import { User } from "../models/User.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
