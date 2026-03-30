@@ -176,6 +176,7 @@ export const ssoSignup = async (req, res) => {
     );
 
     const user = insertUser.rows[0];
+    console.log("user after insert", user);
 
     // ✅ 4. Generate JWT
     const token = generateToken(user);
@@ -245,6 +246,7 @@ export const ssoLogin = async (req, res) => {
     }
 
     const user = result.rows[0];
+    console.log("user from db while login", user);
 
     // ✅ 2. Compare password
     const match = await bcrypt.compare(password, user.password);
