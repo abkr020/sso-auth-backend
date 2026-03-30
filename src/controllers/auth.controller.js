@@ -174,7 +174,7 @@ export const ssoSignup = async (req, res) => {
     const insertUser = await neonQuery(
       `INSERT INTO users (name, email, password, signup_source)
        VALUES ($1, $2, $3, $4)
-       RETURNING id, name, email`,
+       RETURNING *`,
       [name, email, hashedPassword, sourceUrl]
     );
 
