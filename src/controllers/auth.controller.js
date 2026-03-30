@@ -3,15 +3,27 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { neonQuery } from "../db/neonPostgresDB.js"
 // import { handleGoogleAuth } from "../services/auth.service.js";
-
+// const privateKey = process.env.PRIVATE_KEY.replace(/\\n/g, '\n');
+export const privateKey = fs.readFileSync(
+  path.join(process.cwd(), "keys", "private.key"),
+  "utf8"
+);
+const publicKey = fs.readFileSync(
+  path.join(process.cwd(), "keys", "public.key"),
+  "utf8"
+);
 // Helper: generate JWT token
-const generateToken = (user) => {
-    const { password, ...safeUser } = user;
+export const generateToken = (user) => {
+  const { password, ...safeUser } = user;
 
   return jwt.sign(
-    {...safeUser,_id: user?._id, id: user?._id, email: user?.email },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+    { ...safeUser, _id: user?._id, id: user?._id, email: user?.email },
+    // process.env.JWT_SECRET,
+    privateKey,
+    {
+      algorithm: "RS256",              // 🔥 MUST for SSO
+      expiresIn: process.env.JWT_EXPIRES_IN || "7d"
+    }
   );
 };
 
@@ -362,17 +374,20 @@ export const ssoLogin_mongodb = async (req, res) => {
 export const checkSession = async (req, res) => {
   try {
     console.log("check session ", req.cookies);
-    
+
     // const token = req.cookies.token;
     const token = req.cookies.sso_token;
-    
+
     if (!token) {
       return res.status(401).json({ authenticated: false });
     }
-    
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, publicKey, {
+      algorithms: ["RS256"], // 🔥 IMPORTANT
+    });
     console.log("decoded ", decoded);
-    
+
     return res.json({
       authenticated: true,
       user: decoded,

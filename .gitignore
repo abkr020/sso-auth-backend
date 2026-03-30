@@ -4,7 +4,8 @@ node_modules/
 # Build output
 dist/
 build/
-
+keys
+# keys/private.key
 # Logs
 npm-debug.log*
 yarn-debug.log*

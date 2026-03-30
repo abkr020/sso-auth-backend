@@ -1,15 +1,16 @@
 import fetch from "node-fetch";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.model.js";
+import { generateToken } from "../controllers/auth.controller.js";
 
 // Helper: generate JWT token (same as your signup/login)
-const generateToken = (user) => {
-  return jwt.sign(
-    { id: user._id, email: user.email },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
-  );
-};
+// const generateToken = (user) => {
+//   return jwt.sign(
+//     { id: user._id, email: user.email },
+//     process.env.JWT_SECRET,
+//     { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+//   );
+// };
 
 export const handleGoogleAuth = async (code, dynamicRedirectUri) => {
   try {
